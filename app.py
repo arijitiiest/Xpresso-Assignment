@@ -20,10 +20,15 @@ def seed_data():
         for d in res.json():
             es.index(index="articles", body=d, id=d['id'])
 
+        message = "Database Seeded Successfully"
+        code = 200
     except Exception as ex:
         print(str(ex))
+        message = "Something went wrong!!!"
+        code = 400
     finally:
-        return jsonify(res.json())
+        return jsonify(message=message), code
+
 
 # Search Keyword route
 @app.route("/search", methods=["GET"])
@@ -49,6 +54,7 @@ def search():
     for article in found["hits"]["hits"]:
         result.append(article['_source'])
     return jsonify(count=found["hits"]["total"]["value"], data=result)
+
 
 # Default
 @app.route("/")
